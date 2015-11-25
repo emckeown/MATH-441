@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -13,9 +14,9 @@ import java.util.Random;
 import java.util.Set;
 
 public class Scheduler {
-	private static int iterations = 100000;
+	private static int iterations = 1000000;
 	private static int curr = 0;
-	private static int numberChanges = 10;
+	private static int numberChanges = 1;
 	
 	private static int withoutChange = 0;
 	
@@ -42,6 +43,10 @@ public class Scheduler {
 	private static int teams = 30;
 	
 	private static double distance = 0;
+	private static double newDistance;
+	
+	static FileWriter fileWriter = null;
+
 	
 	public static void main(String[] args) {
 		
@@ -65,21 +70,20 @@ public class Scheduler {
 		awayTeamList = new ArrayList<Team>();
 		
 		random = new Random();
-		
+		printmap.print(teamList.get(13));
+		writeToFile("before.txt");
 		System.out.println(distance);
 		while (curr<iterations) {
 			localSearch();
 			
 		}
 		System.out.println(distance);
-//		localSearch2();
-//		System.out.println(distance);
-//		curr = 0;
-//		localSearch2();
-//		System.out.println(distance);
-//		curr = 0;
-//		localSearch2();
-//		System.out.println(distance);
+		writeToFile("test.txt");
+		
+
+		printmap.print(teamList.get(13));
+		
+
 		
 	}
 	
@@ -95,11 +99,12 @@ public class Scheduler {
 		//printSchedule();
 		boolean isBetter = isDistanceLess();
 		boolean valid = checkValid();
-		if ((isBetter && valid)) 
+		if ((isBetter && valid) )
 				//|| (withoutChange>15 && valid)) 
 				{
-			for (int i = 0; i<changedTeams.size(); i++) {
-				changedTeams.get(i).setScheduleToNew();
+			for (int i = 0; i<teamList.size(); i++) {
+				teamList.get(i).setScheduleToNew();
+				distance = newDistance;
 				withoutChange = 0;
 			}
 		}
@@ -395,7 +400,7 @@ public class Scheduler {
 	}
 	
 	private static boolean isDistanceLess() {
-		double newDistance = 0;
+		newDistance = 0;
 		changedTeams = new ArrayList<Team>();
 		for (int i = 0; i<awayTeamList.size(); i++) {
 			if (!changedTeams.contains(awayTeamList.get(i))) {
@@ -410,7 +415,7 @@ public class Scheduler {
 		}
 		
 		for (int i = 0; i<changedTeams.size(); i++) {
-			teamList.get(i).teamScheduleDistance(teamList.get(i).getNewSchedule());
+			changedTeams.get(i).teamScheduleDistance(changedTeams.get(i).getNewSchedule());
 		}
 		
 		for (int i = 0; i<teams; i++) {
@@ -418,12 +423,53 @@ public class Scheduler {
 		}
 		
 		if (newDistance <= distance) {
-			distance = newDistance;
+			
 			return true;
 		}
 		
 		return false;
 		
+	}
+	
+	private static void writeToFile(String file) {
+
+		try {
+		fileWriter = new FileWriter(file);
+
+			for (int i = 0; i< teams; i++) {
+				Team t = teamList.get(i);
+				for (int j = 0; j < t.getTeamSchedule().size(); j++) {
+					Team home = t.getTeamSchedule().get(j);
+					if (home.getHomeIndex() >= 0 && home.getHomeIndex() != t.getHomeIndex()) {
+						fileWriter.append(t.getTeamName());
+						fileWriter.append(", ");
+						fileWriter.append(home.getTeamName());
+						fileWriter.append(", ");
+						fileWriter.append(String.valueOf(j));
+						fileWriter.append("\n");
+
+					}
+				}
+
+			}
+		} catch (Exception e) {
+		            System.out.println("Error in CsvFileWriter !!!");
+		            e.printStackTrace();
+		        } finally {
+		            try {
+		                fileWriter.flush();
+		                fileWriter.close();
+		            } catch (IOException e) {
+		                System.out.println("Error while flushing/closing fileWriter !!!");
+		                e.printStackTrace();
+		            }
+		        }
+
+	}
+	
+	private static String intToDate(int dayIndex) {
+		String date = new String();
+		return date;
 	}
 	
 

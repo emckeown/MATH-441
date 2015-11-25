@@ -105,6 +105,10 @@ public class Team {
 				travelSchedule.add(schedule.get(i));
 			}
 		}
+		
+		// get the distance from home arena to first game
+		distance = distanceBetweenCities(this, travelSchedule.get(0));
+		
 		for (int i=0; i<travelSchedule.size() -1; i++) {
 			distance = distance + this.distanceBetweenCities(travelSchedule.get(i), travelSchedule.get(i+1));
 		}
@@ -157,7 +161,7 @@ public class Team {
 				}
 			}
 			// increment on days off if they're away from home
-			else if (daysOnRoad >= 0) {
+			else if (daysOnRoad > 0) {
 				daysOnRoad++;
 				if (daysOnRoad > maxDaysOnRoad) {
 					return false;
@@ -204,7 +208,7 @@ public class Team {
 		//Check that they don't play more than 7 games a row away
 		int roadGames = 0;
 		for (int i = 0; i < travelSchedule.size(); i++) {
-			if (newSchedule.get(i).getHomeIndex() == homeIndex) {
+			if (travelSchedule.get(i).getHomeIndex() == homeIndex) {
 				roadGames = 0;
 			}
 			else {
