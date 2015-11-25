@@ -23,7 +23,7 @@ public class Team {
 	double q;
 	double a;
 	double c2;
-	double distance;
+	double distance = 0;
 	
 
 
@@ -89,13 +89,15 @@ public class Team {
 		for (int i=0; i<teamSchedule.size(); i++) {
 			newSchedule.set(i, teamSchedule.get(i));
 		}
+		teamScheduleDistance(teamSchedule);
 	}
 	
 	public Team getElement(List<Team> schedule, int dayIndex) {
 		return schedule.get(dayIndex);
 	}
 	
-	public double teamScheduleDistance(List<Team> schedule) {
+	public void teamScheduleDistance(List<Team> schedule) {
+		distance = 0;
 		int size = schedule.size();
 		List<Team> travelSchedule = new ArrayList<Team>();
 		for (int i = 0; i<size; i++) {
@@ -103,11 +105,9 @@ public class Team {
 				travelSchedule.add(schedule.get(i));
 			}
 		}
-		double distance = 0;
 		for (int i=0; i<travelSchedule.size() -1; i++) {
 			distance = distance + this.distanceBetweenCities(travelSchedule.get(i), travelSchedule.get(i+1));
 		}
-		return distance;
 		
 	}
 
@@ -125,9 +125,9 @@ public class Team {
 			       Math.sin(q/2) * Math.sin(q/2);
 			c2 = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-			distance = R * c2; 
-			distance = distance*.001;
-			return distance; 
+			double betweenCities = R * c2; 
+			betweenCities = betweenCities*.001;
+			return betweenCities; 
 	}
 	
 	public void printTeamSchedule() {
@@ -217,6 +217,10 @@ public class Team {
 		
 		
 		return true;
+	}
+	
+	public double getDistance() {
+		return distance;
 	}
 	
 	

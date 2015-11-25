@@ -13,9 +13,11 @@ import java.util.Random;
 import java.util.Set;
 
 public class Scheduler {
-	private static int iterations = 12000;
+	private static int iterations = 100000;
 	private static int curr = 0;
-	private static int numberChanges = 1;
+	private static int numberChanges = 10;
+	
+	private static int withoutChange = 0;
 	
 	private static Random random;
 	
@@ -40,7 +42,6 @@ public class Scheduler {
 	private static int teams = 30;
 	
 	private static double distance = 0;
-	private static double distanceChange = 0;
 	
 	public static void main(String[] args) {
 		
@@ -49,7 +50,9 @@ public class Scheduler {
 		
 		setUpSchedule();
 		
-		distanceTravelled();
+		setTeamDistances();
+		
+		setDistance();
 		
 		teamList.get(0).printTeamSchedule();
 				
@@ -64,12 +67,16 @@ public class Scheduler {
 		random = new Random();
 		
 		System.out.println(distance);
-		
-		localSearch2();
+		while (curr<iterations) {
+			localSearch();
+			
+		}
 		System.out.println(distance);
-		curr = 0;
-		localSearch2();
-		System.out.println(distance);
+//		localSearch2();
+//		System.out.println(distance);
+//		curr = 0;
+//		localSearch2();
+//		System.out.println(distance);
 //		curr = 0;
 //		localSearch2();
 //		System.out.println(distance);
@@ -86,23 +93,24 @@ public class Scheduler {
 		
 //		System.out.println(distanceTravelled());
 		//printSchedule();
-		
-		if (isDistanceLess() && checkValid()) {
+		boolean isBetter = isDistanceLess();
+		boolean valid = checkValid();
+		if ((isBetter && valid)) 
+				//|| (withoutChange>15 && valid)) 
+				{
 			for (int i = 0; i<changedTeams.size(); i++) {
 				changedTeams.get(i).setScheduleToNew();
+				withoutChange = 0;
 			}
-			distance = distance + distanceChange;
 		}
 		else {
 		for (int i = 0; i<changedTeams.size(); i++) {
 			changedTeams.get(i).resetSchedule();
+			withoutChange++;
 			}
 		}
 //		System.out.println(distance);
-		if (curr<iterations) {
-			localSearch();
-			
-		}
+
 		
 	}
 	
@@ -121,7 +129,7 @@ public class Scheduler {
 			for (int i = 0; i<changedTeams.size(); i++) {
 				changedTeams.get(i).setScheduleToNew();
 			}
-			distance = distance + distanceChange;
+
 		}
 		else {
 		for (int i = 0; i<changedTeams.size(); i++) {
@@ -374,16 +382,20 @@ public class Scheduler {
 		}
 	}
 	
-	private static double distanceTravelled() {
-		distance = 0;
+	private static void setTeamDistances() {
 		for (int i = 0; i<teams; i++) {
-			distance = distance + teamList.get(i).teamScheduleDistance(teamList.get(i).getTeamSchedule());
+			teamList.get(i).teamScheduleDistance(teamList.get(i).getTeamSchedule());
 		}
-		return distance;
+	}
+	
+	private static void setDistance() {
+		for (int i = 0; i<teams; i++) {
+			distance = distance + teamList.get(i).getDistance();
+		}
 	}
 	
 	private static boolean isDistanceLess() {
-		distanceChange = 0;
+		double newDistance = 0;
 		changedTeams = new ArrayList<Team>();
 		for (int i = 0; i<awayTeamList.size(); i++) {
 			if (!changedTeams.contains(awayTeamList.get(i))) {
@@ -398,12 +410,19 @@ public class Scheduler {
 		}
 		
 		for (int i = 0; i<changedTeams.size(); i++) {
-			Team team = changedTeams.get(i);
-			distanceChange = distanceChange + (team.teamScheduleDistance(team.getNewSchedule()) - 
-				team.teamScheduleDistance(team.getTeamSchedule()));
+			teamList.get(i).teamScheduleDistance(teamList.get(i).getNewSchedule());
 		}
 		
-		return distanceChange <= 0;
+		for (int i = 0; i<teams; i++) {
+			newDistance = newDistance + teamList.get(i).getDistance();
+		}
+		
+		if (newDistance <= distance) {
+			distance = newDistance;
+			return true;
+		}
+		
+		return false;
 		
 	}
 	
