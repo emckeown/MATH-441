@@ -12,7 +12,7 @@ public class Team {
 	private int numberHomeGames = 41;
 	private int numberGames = 8;
 	private int days;
-	private int maxDaysOnRoad = 3;
+	private int maxDaysOnRoad = 4;
 	private int maxroadGames = 2;
 
 	

@@ -15,7 +15,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class Scheduler {
-	private static int iterations = 10000000;
+	private static int iterations = 1000000;
 	private static int curr = 0;
 	private static int numberChanges = 1;
 	
