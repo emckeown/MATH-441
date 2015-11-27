@@ -15,7 +15,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class Scheduler {
-	private static int iterations = 100000;
+	private static int iterations = 10000000;
 	private static int curr = 0;
 	private static int numberChanges = 1;
 	
@@ -38,14 +38,14 @@ public class Scheduler {
 	
 	private static List<Team> teamList;
 	
-	private static String teamFile = "teams.txt";
-	private static String scheduleFile = "2014_2015_NHL_Schedule.csv";
+	private static String teamFile = "toyTeams.txt";
+	private static String scheduleFile = "toySchedule.csv";
 	
 	private static Team bye;
 	private static Team awayTeam2;
 	
-	private static int days = 190;
-	private static int teams = 30;
+	private static int days = 20;
+	private static int teams = 5;
 	
 	private static double distance = 0;
 	private static double newDistance;
@@ -79,7 +79,7 @@ public class Scheduler {
 		
 		
 		random = new Random();
-		printmap.print(teamList.get(13));
+		//printmap.print(teamList.get(1));
 		
 		writeToFile("before.txt");
 		System.out.println(distance);

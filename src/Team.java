@@ -10,10 +10,10 @@ public class Team {
 	private List<Team> teamSchedule;
 	private List<Team> newSchedule;
 	private int numberHomeGames = 41;
-	private int numberGames = 82;
+	private int numberGames = 8;
 	private int days;
-	private int maxDaysOnRoad = 17;
-	private int maxroadGames = 7;
+	private int maxDaysOnRoad = 3;
+	private int maxroadGames = 2;
 
 	
 	double c = 0.0174603175;
@@ -221,7 +221,7 @@ public class Team {
 		}
 		
 		//add 1 to number of games to account for 'fake' home game
-		if (travelSchedule.size() != numberGames + 1) {
+		if (travelSchedule.size() != numberGames) {
 			return false;
 		}
 		
