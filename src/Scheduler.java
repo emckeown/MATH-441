@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,7 +15,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class Scheduler {
-	private static int iterations = 1000000;
+	private static int iterations = 100000;
 	private static int curr = 0;
 	private static int numberChanges = 1;
 	
@@ -30,6 +31,10 @@ public class Scheduler {
 	private static List<Team> homeTeamList;
 	private static List<Team> awayTeamList;
 	static List<Team> changedTeams;
+	
+	private static List<Integer> allStarBreak;
+	private static String startOfBreak = "01/22/2015"; 
+	private static String endOfBreak = "01/26/2015";
 	
 	private static List<Team> teamList;
 	
@@ -53,10 +58,12 @@ public class Scheduler {
 		teamList = new ArrayList<Team>(teams);
 		setUpTeams();
 		
+		allStarBreak = new ArrayList<>();
+		
 		setUpSchedule();
 		
 		setTeamDistances();
-		
+		boolean valid = checkValid();
 		setDistance();
 		
 		teamList.get(0).printTeamSchedule();
@@ -69,10 +76,28 @@ public class Scheduler {
 		homeTeamList = new ArrayList<Team>();
 		awayTeamList = new ArrayList<Team>();
 		
+		
+		
 		random = new Random();
 		printmap.print(teamList.get(13));
+		
 		writeToFile("before.txt");
 		System.out.println(distance);
+		
+//		boolean valid = checkValid();
+		int test = 0;
+//		while (!valid) {
+//			numberChanges = 1;
+//			findNewRandom();
+//			test++;
+//			if (test == 1000) {
+//				writeToFile("randomSchedule.txt");
+//			}
+//			System.out.println(test);
+//		}
+		System.out.println(distance);
+		writeToFile("randomSchedule.txt");
+		
 		while (curr<iterations) {
 			localSearch();
 			
@@ -81,7 +106,7 @@ public class Scheduler {
 		writeToFile("test.txt");
 		
 
-		printmap.print(teamList.get(13));
+//		printmap.print(teamList.get(13));
 		
 
 		
@@ -109,8 +134,8 @@ public class Scheduler {
 			}
 		}
 		else {
-		for (int i = 0; i<changedTeams.size(); i++) {
-			changedTeams.get(i).resetSchedule();
+		for (int i = 0; i<teamList.size(); i++) {
+			teamList.get(i).resetSchedule(allStarBreak);
 			withoutChange++;
 			}
 		}
@@ -119,39 +144,45 @@ public class Scheduler {
 		
 	}
 	
-	public static void localSearch2() {
+	public static void findNewRandom() {
 		curr++;
 
-		removeGames2();
-		addGames2();
+		removeGames();
+		addGames();
 		
 	
-		
-//		System.out.println(distanceTravelled());
-		//printSchedule();
-		
-		if (isDistanceLess() && checkValid()) {
-			for (int i = 0; i<changedTeams.size(); i++) {
-				changedTeams.get(i).setScheduleToNew();
+		if (checkNumberGames()) {
+			for (int i = 0; i<teamList.size(); i++) {
+				teamList.get(i).setScheduleToNew();
+				distance = newDistance;
+				withoutChange = 0;
 			}
-
 		}
 		else {
-		for (int i = 0; i<changedTeams.size(); i++) {
-			changedTeams.get(i).resetSchedule();
+			for (int i = 0; i<teamList.size(); i++) {
+				teamList.get(i).resetSchedule(allStarBreak);
+				withoutChange++;
+				}
 			}
-		}
 //		System.out.println(distance);
-		if (curr<iterations) {
-			localSearch2();
-			
-		}
+
 		
 	}
 	
+	
+	
 	private static boolean checkValid() {
-		for (int i = 0; i<changedTeams.size(); i++) {
-			if (!changedTeams.get(i).isValidSchedule()) {
+		for (int i = 0; i<teams; i++) {
+			if (!teamList.get(i).isValidSchedule(allStarBreak)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private static boolean checkNumberGames() {
+		for (int i = 0; i<teams; i++) {
+			if (!teamList.get(i).checkNumberGames()) {
 				return false;
 			}
 		}
@@ -178,9 +209,17 @@ public class Scheduler {
 				validMoveToList.add(i);
 			}		
 		}
+		int size = validMoveToList.size();
+		validMoveToList.removeAll(allStarBreak);
+		size = validMoveToList.size();
+		size = 0;
 	}
 	
 	private static void removeGames() {
+		boolean numberGames = checkNumberGames();
+		if (numberGames) {
+			
+		}
 		homeTeamList.clear();
 		moveFromList.clear();
 		awayTeamList.clear();
@@ -194,47 +233,24 @@ public class Scheduler {
 			
 			int moveFrom = moveFromList.get(i);
 			Team awayTeam = awayTeamList.get(i);
+			
 
 			setHomeTeam(moveFrom, awayTeam);
 			Team homeTeam = homeTeamList.get(i);
 			
 			awayTeam.setNewSchedule(bye, moveFrom);
 			homeTeam.setNewSchedule(bye, moveFrom);
+			
+			size = 0;
 
 			
 			
 		}
+		int size = awayTeamList.size();
+		size = 0;
 		
 	}
 	
-	private static void removeGames2() {
-		homeTeamList.clear();
-		moveFromList.clear();
-		awayTeamList.clear();
-		awayTeam2 = teamList.get(random.nextInt(teams));
-		for (int i = 0; i < numberChanges; i++) {
-			
-			//awayTeamList.add(teamList.get(random.nextInt(teams)));
-			
-			setValidMoveFromList(awayTeam2);
-			int size = validMoveFromList.size();
-			
-			moveFromList.add(validMoveFromList.get(random.nextInt(validMoveFromList.size())));
-			
-			int moveFrom = moveFromList.get(i);
-			
-
-			setHomeTeam(moveFrom, awayTeam2);
-			Team homeTeam = homeTeamList.get(i);
-			
-			awayTeam2.setNewSchedule(bye, moveFrom);
-			homeTeam.setNewSchedule(bye, moveFrom);
-
-			
-			
-		}
-		
-	}
 	
 	private static void setHomeTeam(int moveFrom, Team awayTeam) {
 			Team homeTeam = awayTeam.getElement(awayTeam.getNewSchedule(), moveFrom);
@@ -246,8 +262,10 @@ public class Scheduler {
 
 		for (int i = 0; i < numberChanges; i++) {
 			Team awayTeam = awayTeamList.get(i);
+			int size = awayTeamList.size();
 			
 			Team homeTeam = homeTeamList.get(i);
+			size = homeTeamList.size();
 			
 					
 			setValidMoveToList(homeTeam, awayTeam);
@@ -262,25 +280,55 @@ public class Scheduler {
 		}
 	}
 	
-	private static void addGames2() {
+	private static void setUpNewSchedule() {
+		
+	    String str;
+	    String[] parse = null;
+	    String home;
+	    String away;
+	    String date;
+	    int dayIndex = 0;
+		try {
 
-		for (int i = 0; i < numberChanges; i++) {
+			BufferedReader in = new BufferedReader(new FileReader(scheduleFile));		    
+		    int game = 1;
+		    while ((str = in.readLine()) != null) {
+		    	parse = str.split(",");
+		    	
+		    	away = parse[0].trim();
+		    	
+		    	home = parse[1].trim();
+		    	
+		    	date = parse[2];
+		    	
+
+		    	dayIndex = Integer.valueOf(date);
+
+		    	
+		    	Team homeTeam = null;
+		    	Team awayTeam = null;
+		    	for (int i = 0; i < teams; i++) {
+		    		Team team = teamList.get(i);
+		    		if (home.equals(team.getTeamName())) {
+		    			homeTeam = team;
+		    		}
+		    		else if (away.equals(team.getTeamName())) {
+		    			awayTeam = team;
+		    		}
+		    	}
+		    	
+		    	homeTeam.setTeamSchedule(homeTeam, dayIndex);
+		    	awayTeam.setTeamSchedule(homeTeam, dayIndex);
+		    		
+
+		    in.close();
+		    }	
+		} catch(IOException e) {
 			
-			Team homeTeam = homeTeamList.get(i);
-			
-					
-			setValidMoveToList(homeTeam, awayTeam2);
-			
-			if (validMoveToList.size() > 0){
-				int moveTo =validMoveToList.get(random.nextInt(validMoveToList.size()));
-			
-				homeTeam.setNewSchedule(homeTeam, moveTo);
-				awayTeam2.setNewSchedule(homeTeam, moveTo);
-				
-			}						
 		}
+		
 	}
-
+	
 	private static void setUpSchedule() {
 	
 	    String str;
@@ -310,6 +358,7 @@ public class Scheduler {
 		    		System.out.println(gameDate);
 		    		if (game == 1) {
 		    			startDate = gameDate;
+		    			
 		    		}
 		    		else {
 		    			dayIndex = daysBetween(startDate, gameDate);
@@ -342,9 +391,20 @@ public class Scheduler {
 			
 		}
 		
+		try {
+    		
+    		int breakStart = daysBetween(startDate, df.parse(startOfBreak));
+    		int endBreak = daysBetween(startDate, df.parse(endOfBreak));
+    		
+    		for (int i = breakStart; i <= endBreak; i++) {
+    			allStarBreak.add(i);
+    			System.out.println(i);
+    			
+    		}
+		} catch( ParseException e) {
+		
+		}	
 	}
-
-
 
 	private static int daysBetween(Date start, Date end) {
 		return (int) ( ( end.getTime() - start.getTime()) /(1000*60*60*24) );
@@ -389,7 +449,7 @@ public class Scheduler {
 	
 	private static void setTeamDistances() {
 		for (int i = 0; i<teams; i++) {
-			teamList.get(i).teamScheduleDistance(teamList.get(i).getTeamSchedule());
+			teamList.get(i).teamScheduleDistance(teamList.get(i).getTeamSchedule(), allStarBreak);
 		}
 	}
 	
@@ -415,7 +475,7 @@ public class Scheduler {
 		}
 		
 		for (int i = 0; i<changedTeams.size(); i++) {
-			changedTeams.get(i).teamScheduleDistance(changedTeams.get(i).getNewSchedule());
+			changedTeams.get(i).teamScheduleDistance(changedTeams.get(i).getNewSchedule(), allStarBreak);
 		}
 		
 		for (int i = 0; i<teams; i++) {

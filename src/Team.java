@@ -12,8 +12,9 @@ public class Team {
 	private int numberHomeGames = 41;
 	private int numberGames = 82;
 	private int days;
-	private int maxDaysOnRoad = 14;
+	private int maxDaysOnRoad = 17;
 	private int maxroadGames = 7;
+
 	
 	double c = 0.0174603175;
 	double R = 6371000; // meters
@@ -33,7 +34,10 @@ public class Team {
 		days = numberDays;
 		teamSchedule = new ArrayList<Team>(days);
 		newSchedule = new ArrayList<Team>(days);
+
+	
 	}
+
 
 	
 	public Team(String status) {
@@ -85,24 +89,29 @@ public class Team {
 		}
 	}
 	
-	public void resetSchedule() {
+	public void resetSchedule(List<Integer> allStarBreak) {
 		for (int i=0; i<teamSchedule.size(); i++) {
 			newSchedule.set(i, teamSchedule.get(i));
 		}
-		teamScheduleDistance(teamSchedule);
+		teamScheduleDistance(teamSchedule, allStarBreak);
 	}
 	
 	public Team getElement(List<Team> schedule, int dayIndex) {
 		return schedule.get(dayIndex);
 	}
 	
-	public void teamScheduleDistance(List<Team> schedule) {
+	public void teamScheduleDistance(List<Team> schedule, List<Integer> allStarBreak) {
 		distance = 0;
 		int size = schedule.size();
 		List<Team> travelSchedule = new ArrayList<Team>();
 		for (int i = 0; i<size; i++) {
 			if (schedule.get(i).getHomeIndex() >=0) {
 				travelSchedule.add(schedule.get(i));
+			}
+			
+			//fake a trip home at the beginning of the all star break
+			else if (i == allStarBreak.get(0)) {
+				travelSchedule.add(this);
 			}
 		}
 		
@@ -143,14 +152,18 @@ public class Team {
 		
 	}
 	
-	public boolean isValidSchedule() {
+	public boolean isValidSchedule(List<Integer> allStarBreak) {
 		int size = newSchedule.size();
 		
 		//Check that they're not on the road for more than 14 days
 		int daysOnRoad = 0;
 		for (int i = 0; i<size; i++) {
+			
+			if (allStarBreak.contains(i)) {
+				daysOnRoad = 0;	
+			}
 			// reset to zero after home game
-			if (newSchedule.get(i).getHomeIndex() == homeIndex) {
+			else if (newSchedule.get(i).getHomeIndex() == homeIndex) {
 				daysOnRoad = 0;
 			}
 			// increment for every away game
@@ -163,7 +176,7 @@ public class Team {
 			// increment on days off if they're away from home
 			else if (daysOnRoad > 0) {
 				daysOnRoad++;
-				if (daysOnRoad > maxDaysOnRoad) {
+				if (newSchedule.get(i).getHomeIndex() >= 0 && daysOnRoad > maxDaysOnRoad) {
 					return false;
 				}
 			}
@@ -174,6 +187,7 @@ public class Team {
 		int daysOffInARow = 0;
 		int numberGamesInARow = 0;
 		for (int i = 0; i<size; i++) {
+			
 			if (newSchedule.get(i).getHomeIndex() >= 0) {
 				numberGamesInARow++;
 				if (numberGamesInARow > 2) {
@@ -200,8 +214,14 @@ public class Team {
 			if (newSchedule.get(i).getHomeIndex() >=0) {
 				travelSchedule.add(newSchedule.get(i));
 			}
+			//fake a trip home at the beginning of the all star break
+			else if (i == allStarBreak.get(0)) {
+				travelSchedule.add(this);
+			}
 		}
-		if (travelSchedule.size() != numberGames) {
+		
+		//add 1 to number of games to account for 'fake' home game
+		if (travelSchedule.size() != numberGames + 1) {
 			return false;
 		}
 		
@@ -220,6 +240,21 @@ public class Team {
 		}
 		
 		
+		return true;
+	}
+	
+	public boolean checkNumberGames() {
+		List<Team> travelSchedule = new ArrayList<Team>();
+		//Check that they're playing 82 games
+		for (int i = 0; i<newSchedule.size(); i++) {
+			if (newSchedule.get(i).getHomeIndex() >=0) {
+				travelSchedule.add(newSchedule.get(i));
+			}
+		}
+
+		if (travelSchedule.size() != numberGames ) {
+			return false;
+		}
 		return true;
 	}
 	

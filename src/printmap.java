@@ -78,22 +78,24 @@ int yold = 0;
                {}
                else
                {
-               nextindex = next.getHomeIndex();
+            	   
+                       nextindex = next.getHomeIndex();
 
-               g2.drawLine(X[previndex],Y[previndex], X[nextindex],Y[nextindex]);
-               previndex = nextindex;}
-               i++;}
-               System.out.println(X[nextindex]+" "+Y[nextindex]+" "+X[previndex]+" "+Y[previndex]);
-                g2.setColor(Color.red);
-                g2.setStroke(new BasicStroke(4));
-                g2.drawLine(X[p.getHomeIndex()],Y[p.getHomeIndex()]+3,
-X[p.getHomeIndex()], Y[p.getHomeIndex()]+3);
-                g2.drawLine(X[p.getHomeIndex()]+3,Y[p.getHomeIndex()],
-X[p.getHomeIndex()]+3, Y[p.getHomeIndex()]);
-                g2.drawLine(X[p.getHomeIndex()],Y[p.getHomeIndex()]-3,
-X[p.getHomeIndex()], Y[p.getHomeIndex()]-3);
-                g2.drawLine(X[p.getHomeIndex()]-3,Y[p.getHomeIndex()],
-X[p.getHomeIndex()]-3, Y[p.getHomeIndex()]);
+                       g2.drawLine(X[previndex],Y[previndex],
+        X[nextindex],Y[nextindex]);
+                       g2.setColor(Color.RED);
+                       g2.setFont(new Font("default", Font.BOLD, 16));
+                       g2.drawString(next.getTeamName(),X[nextindex]+5 , Y[nextindex]);
+                       previndex = nextindex;
+                       g2.setColor(Color.black);}
+                       i++;}
+                       System.out.println(X[nextindex]+" "+Y[nextindex]+" "+X[previndex]+" "+Y[previndex]);
+                        g2.setColor(Color.red);
+                        g2.setStroke(new BasicStroke(4));
+                        g2.drawLine(X[p.getHomeIndex()],Y[p.getHomeIndex()]+3,
+        X[p.getHomeIndex()], Y[p.getHomeIndex()]+3);
+                        g2.drawLine(X[p.getHomeIndex()]+3,Y[p.getHomeIndex()],
+        X[p.getHomeIndex()]+3, Y[p.getHomeIndex()]);
                 g2.dispose();
                imageLabel.setIcon(new ImageIcon(bImage));
 
