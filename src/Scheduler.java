@@ -15,7 +15,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class Scheduler {
-	private static int iterations = 100000;
+	private static int iterations = 10000;
 	private static int curr = 0;
 	private static int numberChanges = 1;
 	
@@ -51,6 +51,8 @@ public class Scheduler {
 	private static double newDistance;
 	
 	static FileWriter fileWriter = null;
+	
+	public static double[] dist;
 
 	
 	public static void main(String[] args) {
@@ -79,22 +81,24 @@ public class Scheduler {
 		
 		
 		random = new Random();
-		printmap.print(teamList.get(13));
+//		printmap.print(teamList.get(13));
+		
 		
 		writeToFile("before.txt");
 		System.out.println(distance);
 		
 //		boolean valid = checkValid();
 		int test = 0;
-//		while (!valid) {
-//			numberChanges = 1;
-//			findNewRandom();
-//			test++;
-//			if (test == 1000) {
-//				writeToFile("randomSchedule.txt");
-//			}
-//			System.out.println(test);
-//		}
+		while (!checkValid()) {
+			numberChanges = 50;
+			findNewRandom();
+			test++;
+			if (test == 1000) {
+				writeToFile("randomSchedule.txt");
+			}
+			System.out.println(test);
+		}
+		numberChanges = 1;
 		System.out.println(distance);
 		writeToFile("randomSchedule.txt");
 		
@@ -105,7 +109,7 @@ public class Scheduler {
 		System.out.println(distance);
 		writeToFile("test.txt");
 		
-
+//		printgraph.print(dist, (iterations/1000) + 1);
 //		printmap.print(teamList.get(13));
 		
 
@@ -204,8 +208,8 @@ public class Scheduler {
 		validMoveToList.clear();
 
 		for (int i = 0; i<days; i++) {
-			if (awayTeam.getElement(awayTeam.getNewSchedule(), i).getTeamName().equals("BYE") && 
-					homeTeam.getElement(awayTeam.getNewSchedule(), i).getTeamName().equals("BYE")) {
+			if (awayTeam.getElement(awayTeam.getNewSchedule(), i).getHomeIndex() < 0 && 
+					homeTeam.getElement(homeTeam.getNewSchedule(), i).getHomeIndex() < 0) {
 				validMoveToList.add(i);
 			}		
 		}
@@ -276,6 +280,7 @@ public class Scheduler {
 				homeTeam.setNewSchedule(homeTeam, moveTo);
 				awayTeam.setNewSchedule(homeTeam, moveTo);
 				
+				size = 0;
 			}						
 		}
 	}
