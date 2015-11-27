@@ -89,16 +89,18 @@ public class Scheduler {
 		
 //		boolean valid = checkValid();
 		int test = 0;
-		while (!checkValid()) {
-			numberChanges = 50;
+		while (!checkValid() && curr < 100000) {
+			numberChanges = 1;
 			findNewRandom();
 			test++;
 			if (test == 1000) {
 				writeToFile("randomSchedule.txt");
 			}
 			System.out.println(test);
+			curr++;
 		}
 		numberChanges = 1;
+		curr = 0;
 		System.out.println(distance);
 		writeToFile("randomSchedule.txt");
 		
