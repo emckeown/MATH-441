@@ -15,7 +15,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class Scheduler {
-	private static int iterations = 10000;
+	private static int iterations = 1000000;
 	private static int curr = 0;
 	private static int numberChanges = 1;
 	
@@ -89,7 +89,7 @@ public class Scheduler {
 		
 //		boolean valid = checkValid();
 		int test = 0;
-		while (!checkValid() && curr < 100000) {
+		while (!checkValid() || test < 10000) {
 			numberChanges = 1;
 			findNewRandom();
 			test++;
@@ -99,6 +99,9 @@ public class Scheduler {
 			System.out.println(test);
 			curr++;
 		}
+		
+		setTeamDistances();
+		setDistance();
 		numberChanges = 1;
 		curr = 0;
 		System.out.println(distance);
@@ -134,8 +137,8 @@ public class Scheduler {
 				//|| (withoutChange>15 && valid)) 
 				{
 			for (int i = 0; i<teamList.size(); i++) {
-				teamList.get(i).setScheduleToNew();
 				distance = newDistance;
+				teamList.get(i).setScheduleToNew();
 				withoutChange = 0;
 			}
 		}
@@ -156,8 +159,9 @@ public class Scheduler {
 		removeGames();
 		addGames();
 		
+//		isDistanceLess();
 	
-		if (checkNumberGames()) {
+		if (checkValid()) {
 			for (int i = 0; i<teamList.size(); i++) {
 				teamList.get(i).setScheduleToNew();
 				distance = newDistance;
@@ -461,6 +465,7 @@ public class Scheduler {
 	}
 	
 	private static void setDistance() {
+		distance = 0;
 		for (int i = 0; i<teams; i++) {
 			distance = distance + teamList.get(i).getDistance();
 		}
