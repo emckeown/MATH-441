@@ -15,7 +15,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class Scheduler {
-	private static int iterations = 1000000;
+	private static int iterations = 100000;
 	private static int curr = 0;
 	private static int numberChanges = 1;
 	
@@ -65,7 +65,7 @@ public class Scheduler {
 		setUpSchedule();
 		
 		setTeamDistances();
-		boolean valid = checkValid();
+
 		setDistance();
 		
 		teamList.get(0).printTeamSchedule();
@@ -86,24 +86,36 @@ public class Scheduler {
 		
 		writeToFile("before.txt");
 		System.out.println(distance);
+		writeResults("Original Schedule Distance: ");
+		
+		while (curr<iterations ) {
+			System.out.println("withoutchange: " +withoutChange);
+			System.out.println(curr);
+			localSearch();		
+		}
+		
+		writeResults("Distance Result: ");
+		curr = 0;
+		withoutChange = 0;
 		
 //		boolean valid = checkValid();
 		int test = 0;
-		while (!checkValid() || test < 10000) {
+		while (!checkValid() || curr < 100000) {
 			numberChanges = 1;
 			findNewRandom();
 			test++;
-			if (test == 1000) {
-				writeToFile("randomSchedule.txt");
-			}
 			System.out.println(test);
-			curr++;
 		}
+		
 		
 		setTeamDistances();
 		setDistance();
-		numberChanges = 1;
+		
+		writeResults("Random Schedule Distance: ");
+
 		curr = 0;
+		withoutChange = 0;
+		
 		System.out.println(distance);
 		writeToFile("randomSchedule.txt");
 		
@@ -111,6 +123,8 @@ public class Scheduler {
 			localSearch();
 			
 		}
+		
+		writeResults("Distance Result: ");
 		System.out.println(distance);
 		writeToFile("test.txt");
 		
@@ -121,8 +135,29 @@ public class Scheduler {
 		
 	}
 	
+	private static void writeResults(String string) {
+		FileWriter fWriter = null;
+		try {
+			fWriter = new FileWriter("Results.txt", true);
+			
+			fWriter.append(string + String.valueOf(distance) + "\n");
+			
+			} catch (Exception e) {
+	        System.out.println("Error in CsvFileWriter !!!");
+	        e.printStackTrace();
+			} finally {
+				try {
+					fWriter.flush();
+	            fWriter.close();
+				} catch (IOException e) {
+	            System.out.println("Error while flushing/closing fileWriter !!!");
+	            e.printStackTrace();
+				}
+			}
+	}
+	
 	public static void localSearch() {
-		curr++;
+		
 
 		removeGames();
 		addGames();
@@ -136,17 +171,20 @@ public class Scheduler {
 		if ((isBetter && valid) )
 				//|| (withoutChange>15 && valid)) 
 				{
-			for (int i = 0; i<teamList.size(); i++) {
+			curr++;
+			for (int i = 0; i<changedTeams.size(); i++) {
 				distance = newDistance;
-				teamList.get(i).setScheduleToNew();
-				withoutChange = 0;
+				changedTeams.get(i).setScheduleToNew();
+				
 			}
+			withoutChange = 0;
 		}
 		else {
-		for (int i = 0; i<teamList.size(); i++) {
-			teamList.get(i).resetSchedule(allStarBreak);
-			withoutChange++;
+		for (int i = 0; i<changedTeams.size(); i++) {
+			changedTeams.get(i).resetSchedule(allStarBreak);
+			
 			}
+		withoutChange++;
 		}
 //		System.out.println(distance);
 
@@ -154,25 +192,26 @@ public class Scheduler {
 	}
 	
 	public static void findNewRandom() {
-		curr++;
 
 		removeGames();
 		addGames();
 		
-//		isDistanceLess();
+		isDistanceLess();
 	
 		if (checkValid()) {
-			for (int i = 0; i<teamList.size(); i++) {
-				teamList.get(i).setScheduleToNew();
+			curr++;
+			for (int i = 0; i<changedTeams.size(); i++) {
+				changedTeams.get(i).setScheduleToNew();
 				distance = newDistance;
-				withoutChange = 0;
+				withoutChange = 0;	
 			}
 		}
 		else {
-			for (int i = 0; i<teamList.size(); i++) {
-				teamList.get(i).resetSchedule(allStarBreak);
-				withoutChange++;
+			for (int i = 0; i<changedTeams.size(); i++) {
+				changedTeams.get(i).resetSchedule(allStarBreak);
+				
 				}
+			withoutChange++;
 			}
 //		System.out.println(distance);
 
@@ -182,8 +221,8 @@ public class Scheduler {
 	
 	
 	private static boolean checkValid() {
-		for (int i = 0; i<teams; i++) {
-			if (!teamList.get(i).isValidSchedule(allStarBreak)) {
+		for (int i = 0; i<changedTeams.size(); i++) {
+			if (!changedTeams.get(i).isValidSchedule(allStarBreak)) {
 				return false;
 			}
 		}
@@ -502,6 +541,8 @@ public class Scheduler {
 		return false;
 		
 	}
+	
+
 	
 	private static void writeToFile(String file) {
 
