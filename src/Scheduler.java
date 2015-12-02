@@ -15,7 +15,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class Scheduler {
-	private static int iterations = 500000;
+	private static int iterations = 100000;
 	private static int curr = 0;
 	private static int numberChanges = 1;
 	
@@ -50,6 +50,7 @@ public class Scheduler {
 	private static double distance = 0;
 	private static double newDistance;
 	
+	
 	static FileWriter fileWriter = null;
 	
 	public static double[] dist;
@@ -69,6 +70,7 @@ public class Scheduler {
 		setDistance();
 		
 		teamList.get(0).printTeamSchedule();
+		writeTeamScheduleToFile("Vancouver Schedule Start.txt", 13);
 				
 		validMoveFromList = new ArrayList<>();
 		validMoveToList = new ArrayList<>();
@@ -89,6 +91,7 @@ public class Scheduler {
 		writeResults("Original Schedule Distance: ");
 		
 		while (curr<iterations ) {
+
 			System.out.println("withoutchange: " +withoutChange);
 			System.out.println(curr);
 			localSearch();		
@@ -98,6 +101,7 @@ public class Scheduler {
 		curr = 0;
 		withoutChange = 0;
 		
+		writeTeamScheduleToFile("Vancouver Schedule Result 1.txt", 13);
 		printmap.print(teamList.get(13));
 		
 //		boolean valid = checkValid();
@@ -132,7 +136,7 @@ public class Scheduler {
 		
 //		printgraph.print(dist, (iterations/1000) + 1);
 		printmap.print(teamList.get(13));
-		
+		writeTeamScheduleToFile("Vancouver Schedule Result 2.txt", 13);
 
 		
 	}
@@ -180,6 +184,9 @@ public class Scheduler {
 				
 			}
 			withoutChange = 0;
+			if (curr%1000 ==0) {
+				plotDistance("Plot Distance.csv");
+			}
 		}
 		else {
 		for (int i = 0; i<changedTeams.size(); i++) {
@@ -582,10 +589,65 @@ public class Scheduler {
 
 	}
 	
-	private static String intToDate(int dayIndex) {
-		String date = new String();
-		return date;
+	private static void writeTeamScheduleToFile(String file, int teamIndex) {
+
+		try {
+		fileWriter = new FileWriter(file);
+
+		
+				Team t = teamList.get(teamIndex);
+				for (int j = 0; j < t.getTeamSchedule().size(); j++) {
+					Team home = t.getTeamSchedule().get(j);
+					
+						fileWriter.append(home.getTeamName());
+						fileWriter.append(", ");
+						fileWriter.append(String.valueOf(j));
+						fileWriter.append("\n");	
+				}
+				
+				fileWriter.append("Total Distance: " + String.valueOf(t.getDistance()));
+			
+		} catch (Exception e) {
+		            System.out.println("Error in CsvFileWriter !!!");
+		            e.printStackTrace();
+		        } finally {
+		            try {
+		                fileWriter.flush();
+		                fileWriter.close();
+		            } catch (IOException e) {
+		                System.out.println("Error while flushing/closing fileWriter !!!");
+		                e.printStackTrace();
+		            }
+		        }
+
 	}
+	
+	private static void plotDistance(String file) {
+
+		try {
+		fileWriter = new FileWriter(file, true);
+		
+			fileWriter.append(String.valueOf(curr));
+			fileWriter.append(",");
+			fileWriter.append(String.valueOf(distance));
+			fileWriter.append("\n");
+
+			
+		} catch (Exception e) {
+		            System.out.println("Error in CsvFileWriter !!!");
+		            e.printStackTrace();
+		        } finally {
+		            try {
+		                fileWriter.flush();
+		                fileWriter.close();
+		            } catch (IOException e) {
+		                System.out.println("Error while flushing/closing fileWriter !!!");
+		                e.printStackTrace();
+		            }
+		        }
+
+	}
+	
 	
 
 }
