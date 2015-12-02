@@ -81,11 +81,11 @@ int yold = 0;
             	   
                        nextindex = next.getHomeIndex();
 
-//                       g2.drawLine(X[previndex],Y[previndex],
-//        X[nextindex],Y[nextindex]);
+                       g2.drawLine(X[previndex],Y[previndex],
+        X[nextindex],Y[nextindex]);
 //                       g2.setColor(Color.RED);
 //                       g2.setFont(new Font("default", Font.BOLD, 16));
-                       g2.drawString(next.getTeamName(),X[nextindex]+5 , Y[nextindex]);
+//                       g2.drawString(next.getTeamName(),X[nextindex]+5 , Y[nextindex]);
                        previndex = nextindex;
                        g2.setColor(Color.black);}
                        i++;}

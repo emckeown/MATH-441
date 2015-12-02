@@ -15,7 +15,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class Scheduler {
-	private static int iterations = 100000;
+	private static int iterations = 0;
 	private static int curr = 0;
 	private static int numberChanges = 1;
 	
@@ -90,6 +90,7 @@ public class Scheduler {
 		System.out.println(distance);
 		writeResults("Original Schedule Distance: ");
 		
+		plotDistance("Plot Distance.csv");
 		while (curr<iterations ) {
 
 			System.out.println("withoutchange: " +withoutChange);
@@ -104,39 +105,39 @@ public class Scheduler {
 		writeTeamScheduleToFile("Vancouver Schedule Result 1.txt", 13);
 		printmap.print(teamList.get(13));
 		
-//		boolean valid = checkValid();
-		int test = 0;
-		while (!checkValid() || curr < iterations) {
-			numberChanges = 1;
-			findNewRandom();
-			test++;
-			System.out.println(test);
-		}
-		
-		
-		setTeamDistances();
-		setDistance();
-		
-		writeResults("Random Schedule Distance: ");
-
-		curr = 0;
-		withoutChange = 0;
-		
-		System.out.println(distance);
-		writeToFile("randomSchedule.txt");
-		
-		while (curr<iterations) {
-			localSearch();
-			
-		}
-		
-		writeResults("Distance Result: ");
-		System.out.println(distance);
-		writeToFile("test.txt");
-		
-//		printgraph.print(dist, (iterations/1000) + 1);
-		printmap.print(teamList.get(13));
-		writeTeamScheduleToFile("Vancouver Schedule Result 2.txt", 13);
+////		boolean valid = checkValid();
+//		int test = 0;
+//		while (!checkValid() || curr < iterations) {
+//			numberChanges = 1;
+//			findNewRandom();
+//			test++;
+//			System.out.println(test);
+//		}
+//		
+//		
+//		setTeamDistances();
+//		setDistance();
+//		
+//		writeResults("Random Schedule Distance: ");
+//		
+//		curr = 0;
+//		withoutChange = 0;
+//		plotDistance("Plot Distance.csv");
+//		System.out.println(distance);
+//		writeToFile("randomSchedule.txt");
+//		writeTeamScheduleToFile("Vancouver Random Schedule.txt", 13);
+//		
+//		while (curr<iterations) {
+//			localSearch();	
+//		}
+//		
+//		writeResults("Distance Result: ");
+//		System.out.println(distance);
+//		writeToFile("test.txt");
+//		
+////		printgraph.print(dist, (iterations/1000) + 1);
+//		printmap.print(teamList.get(13));
+//		writeTeamScheduleToFile("Vancouver Schedule Result 2.txt", 13);
 
 		
 	}

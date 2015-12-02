@@ -57,6 +57,12 @@ Random Schedule Distance: 3222330.405723305
 Distance Result: 1188261.6242665974
 
 
+
+Original Schedule Distance: 1904304.7844592256
+Distance Result: 1152583.2661694074
+Random Schedule Distance: 3239241.315970895
+Distance Result: 1198169.0748781036
+
 500,000 iterations
 
 Original Schedule Distance: 1904304.7844592256
@@ -86,3 +92,16 @@ Original Schedule Distance: 1904304.7844592256
 Distance Result: 1095037.6559324793
 Random Schedule Distance: 3130751.3328718627
 Distance Result: 1163446.624267055
+
+
+600,000 iterations
+
+
+Original Schedule Distance: 1904304.7844592256
+Distance Result: 1077309.7332321776
+Random Schedule Distance: 3195925.920299437
+Distance Result: 1124593.2066629482
+
+
+
+
