@@ -15,7 +15,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class Scheduler {
-	private static int iterations = 100000;
+	private static int iterations = 500000;
 	private static int curr = 0;
 	private static int numberChanges = 1;
 	
@@ -81,7 +81,7 @@ public class Scheduler {
 		
 		
 		random = new Random();
-//		printmap.print(teamList.get(13));
+		printmap.print(teamList.get(13));
 		
 		
 		writeToFile("before.txt");
@@ -98,9 +98,11 @@ public class Scheduler {
 		curr = 0;
 		withoutChange = 0;
 		
+		printmap.print(teamList.get(13));
+		
 //		boolean valid = checkValid();
 		int test = 0;
-		while (!checkValid() || curr < 100000) {
+		while (!checkValid() || curr < iterations) {
 			numberChanges = 1;
 			findNewRandom();
 			test++;
@@ -129,7 +131,7 @@ public class Scheduler {
 		writeToFile("test.txt");
 		
 //		printgraph.print(dist, (iterations/1000) + 1);
-//		printmap.print(teamList.get(13));
+		printmap.print(teamList.get(13));
 		
 
 		

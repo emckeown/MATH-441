@@ -1,3 +1,4 @@
+100,000 iterations
 
 Original Schedule Distance: 1904304.7844592256
 Distance Result: 1128670.5186256883
@@ -24,3 +25,64 @@ Original Schedule Distance: 1904304.7844592256
 Distance Result: 1129828.6960406185
 Random Schedule Distance: 3224701.842019774
 Distance Result: 1192675.8688694187
+
+
+
+Original Schedule Distance: 1904304.7844592256
+Distance Result: 1154411.459625874
+Random Schedule Distance: 3259726.9454629337
+Distance Result: 1215625.9838720532
+
+
+
+Original Schedule Distance: 1904304.7844592256
+Distance Result: 1130591.935360957
+Random Schedule Distance: 3145442.7523916434
+Distance Result: 1187463.153056499
+
+
+
+
+Original Schedule Distance: 1904304.7844592256
+Distance Result: 1127143.5758661772
+Random Schedule Distance: 3220201.0970067494
+Distance Result: 1185051.5917793543
+
+
+
+
+Original Schedule Distance: 1904304.7844592256
+Distance Result: 1107450.4091165876
+Random Schedule Distance: 3222330.405723305
+Distance Result: 1188261.6242665974
+
+
+500,000 iterations
+
+Original Schedule Distance: 1904304.7844592256
+Distance Result: 1092568.6875075484
+Random Schedule Distance: 3210349.7179818787
+Distance Result: 1128560.1492980714
+
+
+
+Original Schedule Distance: 1904304.7844592256
+Distance Result: 1097867.3744466794
+Random Schedule Distance: 3235216.076176327
+Distance Result: 1164461.727120808
+
+
+
+
+Original Schedule Distance: 1904304.7844592256
+Distance Result: 1103806.542048914
+Random Schedule Distance: 3221750.667187812
+Distance Result: 1141947.2361266313
+
+
+
+
+Original Schedule Distance: 1904304.7844592256
+Distance Result: 1095037.6559324793
+Random Schedule Distance: 3130751.3328718627
+Distance Result: 1163446.624267055
